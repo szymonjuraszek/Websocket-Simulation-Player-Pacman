@@ -3,6 +3,7 @@ import {BehaviorSubject, interval, Subscription} from 'rxjs';
 import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
+import {JsonFormatter} from './formatter/JsonFormatter';
 
 export class WebsocketSimulationConnection {
   private additionalData = this.randomString(1000, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -18,7 +19,8 @@ export class WebsocketSimulationConnection {
   constructor(nick, measurementService) {
     this.nick = nick;
     this.measurementService = measurementService;
-    this.setFormatter(new ProtobufFormatter());
+    // this.setFormatter(new ProtobufFormatter());
+    this.setFormatter(new JsonFormatter());
   }
 
   // tslint:disable-next-line:typedef
@@ -32,6 +34,7 @@ export class WebsocketSimulationConnection {
 
   initializeConnection(data, timeToSend): void {
     this.stompClient = new Client({
+      // brokerURL: 'ws://83.229.84.77:8080/socket',
       brokerURL: 'ws://localhost:8080/socket',
       // debug: (str) => {
       //   console.log(str);
@@ -53,13 +56,13 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/pacman/update/player', (playerToUpdate) => {
-        if (this.nick === 'qwerty01') {
-          const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
-          const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-          this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
-            Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-            parsedPlayer.version, playerToUpdate.headers.contentLength);
-        }
+        // if (this.nick === 'local01') {
+        //   const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
+        //   const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
+        //   this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
+        //     Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
+        //     parsedPlayer.version, playerToUpdate.headers.contentLength);
+        // }
       });
 
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {
@@ -93,7 +96,7 @@ export class WebsocketSimulationConnection {
       this.joinToGame(this.nick);
       this.addPlayer(this.nick);
       console.error('Polaczylem sie');
-    }, 2000);
+    }, 500);
 
     let timesRun = 0;
     let strategy = true;
@@ -123,7 +126,7 @@ export class WebsocketSimulationConnection {
       this.sub.unsubscribe();
       console.error('Zakonczono komunikacje z serverem');
       this.disconnect();
-    }, 40000);
+    }, 100000);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,14 +138,26 @@ export class WebsocketSimulationConnection {
 
   sendPosition(dataToSend): void {
     const dataWithSpecificFormat = this.formatter.encode(dataToSend);
-    this.stompClient.publish({
-      destination: '/app/send/position/protobuf',
-      binaryBody: dataWithSpecificFormat.serializeBinary(),
-      headers: {
-        /*'content-type': 'application/octet-stream',*/
-        requestTimestamp: new Date().getTime().toString()
-      }
-    });
+    if (this.formatter instanceof JsonFormatter) {
+      this.stompClient.publish({
+        destination: '/app/send/position',
+        body: JSON.stringify(
+          dataWithSpecificFormat
+        ),
+        headers: {
+          requestTimestamp: new Date().getTime().toString()
+        }
+      });
+    } else if (this.formatter instanceof ProtobufFormatter) {
+      this.stompClient.publish({
+        destination: '/app/send/position/protobuf',
+        binaryBody: dataWithSpecificFormat.serializeBinary(),
+        headers: {
+          /*'content-type': 'application/octet-stream',*/
+          requestTimestamp: new Date().getTime().toString()
+        }
+      });
+    }
   }
 
   joinToGame(nickname: string): void {
