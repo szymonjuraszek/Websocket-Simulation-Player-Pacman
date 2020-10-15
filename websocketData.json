@@ -1,56 +1,56 @@
 [
   {
-    "nickname": "local01",
+    "nickname": "remote01",
     "positionX": 1264,
-    "positionY": 912,
+    "positionY": 656,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "local02",
+    "nickname": "remote02",
     "positionX": 1264,
-    "positionY": 976,
+    "positionY": 592,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "local03",
+    "nickname": "remote03",
     "positionX": 1264,
-    "positionY": 848,
+    "positionY": 528,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "local04",
+    "nickname": "remote04",
     "positionX": 1264,
-    "positionY": 784,
+    "positionY": 464,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "local05",
+    "nickname": "remote05",
     "positionX": 1264,
-    "positionY": 720,
-    "score": 0,
-    "stepDirection": "HOR",
-    "version": 0
-  },
-  {
-    "nickname": "local11",
-    "positionX": 1400,
     "positionY": 400,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "local12",
+    "nickname": "remote06",
     "positionX": 1400,
-    "positionY": 464,
+    "positionY": 592,
+    "score": 0,
+    "stepDirection": "HOR",
+    "version": 0
+  },
+  {
+    "nickname": "remote07",
+    "positionX": 1400,
+    "positionY": 528,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
