@@ -28,7 +28,6 @@ export class ProtobufFormatter implements IFormatter{
     // }
     //
     // playerProto.setAdditionaldataList(newData);
-    console.error(playerProto);
 
     return playerProto;
   }
