@@ -4,6 +4,7 @@ import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
 import {JsonFormatter} from './formatter/JsonFormatter';
+import {STOP_SENDING_TIMEOUT, URL_WEBSOCKET} from '../../globalConfig';
 
 export class WebsocketSimulationConnection {
   private additionalData = this.randomString(1000, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -19,8 +20,8 @@ export class WebsocketSimulationConnection {
   constructor(nick, measurementService) {
     this.nick = nick;
     this.measurementService = measurementService;
-    // this.setFormatter(new ProtobufFormatter());
-    this.setFormatter(new JsonFormatter());
+    this.setFormatter(new ProtobufFormatter());
+    // this.setFormatter(new JsonFormatter());
   }
 
   // tslint:disable-next-line:typedef
@@ -35,7 +36,7 @@ export class WebsocketSimulationConnection {
   initializeConnection(data, timeToSend): void {
     this.stompClient = new Client({
       // brokerURL: 'ws://83.229.84.77:8080/socket',
-      brokerURL: 'ws://localhost:8080/socket',
+      brokerURL: URL_WEBSOCKET,
       // debug: (str) => {
       //   console.log(str);
       // },
@@ -61,7 +62,7 @@ export class WebsocketSimulationConnection {
           const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
           this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
             Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-            parsedPlayer.version, playerToUpdate.headers.contentLength);
+            parsedPlayer.version, playerToUpdate.headers.contentLength, playerToUpdate.headers.requestTimestamp);
         }
       });
 
@@ -78,6 +79,13 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
+        const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
+        if (parsedPlayer.nickname === 'remote01' && parsedPlayer.nickname.match('remote*')) {
+          const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
+          this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
+            Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
+            parsedPlayer.version, playerToUpdate.headers.contentLength, playerToUpdate.headers.requestTimestamp);
+        }
       });
 
       this.stompClient.subscribe('/pacman/collision/update', (allCoinPosition) => {
@@ -92,19 +100,19 @@ export class WebsocketSimulationConnection {
     console.error('Inicjalizuje polaczenie.');
     this.stompClient.activate();
 
+    this.timeForStartCommunication = new Date().getTime();
     setTimeout(() => {
       this.joinToGame(this.nick);
       this.addPlayer(this.nick);
       console.error('Polaczylem sie');
-    }, 500);
+    }, timeToSend - 500);
 
     let timesRun = 0;
     let strategy = true;
     // data.additionalData = this.additionalData;
     setTimeout(() => {
       console.error('Zaczynam wysylac dane.');
-      this.timeForStartCommunication = new Date().getTime();
-      const sender = interval(20);
+      const sender = interval(21);
       this.sub = sender.subscribe(() => {
         timesRun += 1;
         if (timesRun === 300) {
@@ -126,7 +134,7 @@ export class WebsocketSimulationConnection {
       this.sub.unsubscribe();
       console.error('Zakonczono komunikacje z serverem');
       this.disconnect();
-    }, 100000);
+    }, STOP_SENDING_TIMEOUT);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
