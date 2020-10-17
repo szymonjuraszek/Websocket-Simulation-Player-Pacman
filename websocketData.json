@@ -1,72 +1,72 @@
 [
   {
-    "nickname": "remote01",
+    "nickname": "local01",
     "positionX": 1264,
-    "positionY": 656,
+    "positionY": 912,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "remote02",
+    "nickname": "local02",
     "positionX": 1264,
-    "positionY": 592,
+    "positionY": 976,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "remote03",
+    "nickname": "local03",
     "positionX": 1264,
-    "positionY": 528,
+    "positionY": 848,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "remote04",
+    "nickname": "local04",
     "positionX": 1264,
+    "positionY": 784,
+    "score": 0,
+    "stepDirection": "HOR",
+    "version": 0
+  },
+  {
+    "nickname": "local05",
+    "positionX": 1264,
+    "positionY": 720,
+    "score": 0,
+    "stepDirection": "HOR",
+    "version": 0
+  },
+  {
+    "nickname": "local11",
+    "positionX": 1400,
+    "positionY": 400,
+    "score": 0,
+    "stepDirection": "HOR",
+    "version": 0
+  },
+  {
+    "nickname": "local12",
+    "positionX": 1400,
     "positionY": 464,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "remote05",
-    "positionX": 1264,
-    "positionY": 400,
+    "nickname": "local13",
+    "positionX": 1000,
+    "positionY": 720,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0
   },
   {
-    "nickname": "remote06",
-    "positionX": 1400,
-    "positionY": 592,
-    "score": 0,
-    "stepDirection": "HOR",
-    "version": 0
-  },
-  {
-    "nickname": "remote07",
-    "positionX": 1400,
-    "positionY": 528,
-    "score": 0,
-    "stepDirection": "HOR",
-    "version": 0
-  },
-  {
-    "nickname": "remote08",
+    "nickname": "local14",
     "positionX": 1000,
     "positionY": 400,
-    "score": 0,
-    "stepDirection": "HOR",
-    "version": 0
-  },
-  {
-    "nickname": "remote09",
-    "positionX": 1000,
-    "positionY": 592,
     "score": 0,
     "stepDirection": "HOR",
     "version": 0

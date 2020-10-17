@@ -57,13 +57,6 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/pacman/update/player', (playerToUpdate) => {
-        const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
-        if (parsedPlayer.nickname === 'remote01' && parsedPlayer.nickname.match('remote*')) {
-          const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-          this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
-            Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-            parsedPlayer.version, playerToUpdate.headers.contentLength, playerToUpdate.headers.requestTimestamp);
-        }
       });
 
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {
@@ -79,13 +72,6 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
-        const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
-        if (parsedPlayer.nickname === 'remote01' && parsedPlayer.nickname.match('remote*')) {
-          const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-          this.measurementService.addMeasurementResponse(parsedPlayer.nickname, responseTimeInMillis,
-            Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-            parsedPlayer.version, playerToUpdate.headers.contentLength, playerToUpdate.headers.requestTimestamp);
-        }
       });
 
       this.stompClient.subscribe('/pacman/collision/update', (allCoinPosition) => {

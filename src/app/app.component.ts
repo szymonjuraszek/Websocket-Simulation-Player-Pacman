@@ -23,7 +23,7 @@ export class AppComponent {
 
     for (let i = 0; i < 9; i++) {
       this.simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService);
-      this.simulationConnection[i].initializeConnection(examplePlayers[i], 6000 + 10000 * i);
+      this.simulationConnection[i].initializeConnection(examplePlayers[i], 1000 + 10000 * i);
     }
   }
 
