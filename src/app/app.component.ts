@@ -6,6 +6,8 @@ import {WebsocketSimulationConnection} from './WebsocketSimulationConnection';
 import {MeasurementService} from './measurement/MeasurementService';
 import {DownloadService} from './downloader/DownloadService';
 import {environment} from '../environments/environment';
+import {ProtobufFormatter} from './formatter/ProtobufFormatter';
+import {JsonFormatter} from './formatter/JsonFormatter';
 
 @Component({
   selector: 'app-root',
@@ -21,12 +23,23 @@ export class AppComponent {
     this.downloadService = new DownloadService(this.measurementService);
   }
 
-  setSendingSpeedAndStart(speed: number): void {
+  setSendingSpeedAndStart(speed: number, type: string): void {
     const examplePlayers = (data as any).default;
     const simulationConnection = new Array(examplePlayers.length);
+    let formatter;
+    switch (type) {
+      case 'proto': {
+        formatter = new ProtobufFormatter();
+        break;
+      }
+      case 'json': {
+        formatter = new JsonFormatter();
+        break;
+      }
+    }
 
     for (let i = environment.startPlayer; i < environment.endPlayer; i++) {
-      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService, speed);
+      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService, speed, formatter);
       simulationConnection[i].initializeConnection(examplePlayers[i], 1000 + 10000 * i);
     }
   }

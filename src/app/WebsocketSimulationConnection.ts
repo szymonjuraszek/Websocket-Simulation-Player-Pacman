@@ -21,11 +21,12 @@ export class WebsocketSimulationConnection {
   private measurementService: MeasurementService;
   private timeForStartCommunication;
 
-  constructor(nick, measurementService, speed) {
+  constructor(nick, measurementService, speed, formatter) {
     this.nick = nick;
     this.measurementService = measurementService;
-    this.setFormatter(environment.FORMATTER);
+    this.setFormatter(formatter);
     this.speed = speed;
+    console.error(formatter);
   }
 
   // tslint:disable-next-line:typedef
