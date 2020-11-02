@@ -54,6 +54,16 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/pacman/update/player', (playerToUpdate) => {
+        if (environment.startPlayer === 5) {
+          const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
+          if (parsedPlayer.nickname.match('second*')) {
+            const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
+            this.measurementService.addMeasurementResponse(parsedPlayer.nickname,
+              responseTimeInMillis,
+              Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
+              parsedPlayer.version, Number(playerToUpdate.headers['content-length']), playerToUpdate.headers.requestTimestamp);
+          }
+        }
       });
 
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {

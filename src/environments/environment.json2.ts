@@ -4,5 +4,5 @@ export const environment = {
   production: false,
   FORMATTER: new JsonFormatter(),
   startPlayer: 5,
-  endPlayer: 9
+  endPlayer: 10
 };
