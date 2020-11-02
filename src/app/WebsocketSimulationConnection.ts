@@ -4,12 +4,14 @@ import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
 import {JsonFormatter} from './formatter/JsonFormatter';
-import {COMMUNICATION_TIME, URL_WEBSOCKET} from '../../globalConfig';
+import {COMMUNICATION_FREQUENCY, COMMUNICATION_TIME, SIZE_OF_ADDITIONAL_DATA, URL_WEBSOCKET} from '../../globalConfig';
 import {environment} from '../environments/environment';
+import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
-  private additionalData = this.randomString(1000, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  private variable = this.makeId(30000);
+  private additionalData = this.randomString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+
   private stompClient: Client;
   private formatter: IFormatter;
   private readonly nick;
@@ -41,8 +43,6 @@ export class WebsocketSimulationConnection {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000
     });
-
-    console.error(this.stompClient);
     this.stompClient.debug = () => {
     };
 
@@ -69,20 +69,11 @@ export class WebsocketSimulationConnection {
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {
       });
 
-      // this.stompClient.subscribe('/pacman/refresh/coins', () => {
-      // });
-      //
-      // this.stompClient.subscribe('/pacman/get/coin', (coinPosition) => {
-      // });
-
       this.stompClient.subscribe('/user/queue/reply', (currentCoinPosition) => {
       });
 
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
       });
-
-      // this.stompClient.subscribe('/pacman/collision/update', (allCoinPosition) => {
-      // });
     };
 
     this.stompClient.onStompError = (frame) => {
@@ -102,10 +93,12 @@ export class WebsocketSimulationConnection {
 
     let timesRun = 0;
     let strategy = true;
+    // for (let i = 0; i < this.arrayWithAdditionalData.length; i++) {
+    //   this.arrayWithAdditionalData[i] = new AdditionalData(11111, 22222, 33333, this.additionalData);
+    // }
     // data.additionalData = this.additionalData;
     setTimeout(() => {
-      console.error('Zaczynam wysylac dane.');
-      const sender = interval(10);
+      const sender = interval(COMMUNICATION_FREQUENCY);
       this.sub = sender.subscribe(() => {
         timesRun += 1;
         if (timesRun === 200) {
