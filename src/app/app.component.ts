@@ -17,13 +17,16 @@ export class AppComponent {
   private readonly measurementService: MeasurementService;
 
   constructor() {
-    const examplePlayers = (data as any).default;
-    const simulationConnection = new Array(examplePlayers.length);
     this.measurementService = new MeasurementService();
     this.downloadService = new DownloadService(this.measurementService);
+  }
+
+  setSendingSpeedAndStart(speed: number): void {
+    const examplePlayers = (data as any).default;
+    const simulationConnection = new Array(examplePlayers.length);
 
     for (let i = environment.startPlayer; i < environment.endPlayer; i++) {
-      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService);
+      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService, speed);
       simulationConnection[i].initializeConnection(examplePlayers[i], 1000 + 10000 * i);
     }
   }

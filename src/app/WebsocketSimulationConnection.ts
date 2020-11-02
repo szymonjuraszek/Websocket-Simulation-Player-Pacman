@@ -4,13 +4,14 @@ import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
 import {JsonFormatter} from './formatter/JsonFormatter';
-import {COMMUNICATION_FREQUENCY, COMMUNICATION_TIME, SIZE_OF_ADDITIONAL_DATA, URL_WEBSOCKET} from '../../globalConfig';
+import {COMMUNICATION_TIME, SIZE_OF_ADDITIONAL_DATA, URL_WEBSOCKET} from '../../globalConfig';
 import {environment} from '../environments/environment';
 import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
   private additionalData = this.randomString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+  private readonly speed;
 
   private stompClient: Client;
   private formatter: IFormatter;
@@ -20,10 +21,11 @@ export class WebsocketSimulationConnection {
   private measurementService: MeasurementService;
   private timeForStartCommunication;
 
-  constructor(nick, measurementService) {
+  constructor(nick, measurementService, speed) {
     this.nick = nick;
     this.measurementService = measurementService;
     this.setFormatter(environment.FORMATTER);
+    this.speed = speed;
   }
 
   // tslint:disable-next-line:typedef
@@ -98,7 +100,7 @@ export class WebsocketSimulationConnection {
     // }
     // data.additionalData = this.additionalData;
     setTimeout(() => {
-      const sender = interval(COMMUNICATION_FREQUENCY);
+      const sender = interval(this.speed);
       this.sub = sender.subscribe(() => {
         timesRun += 1;
         if (timesRun === 200) {
