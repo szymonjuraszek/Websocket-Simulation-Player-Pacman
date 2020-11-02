@@ -29,31 +29,35 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "json1": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.json1.ts"
                 }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
+              ]
+            },
+            "json2": {
+              "fileReplacements": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.json2.ts"
+                }
+              ]
+            },
+            "json3": {
+              "fileReplacements": [
                 {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.json3.ts"
+                }
+              ]
+            },
+            "protobuf": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.protobuf.ts"
                 }
               ]
             }
@@ -65,8 +69,17 @@
             "browserTarget": "Example:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "Example:build:production"
+            "json1": {
+              "browserTarget": "Example:build:json1"
+            },
+            "json2": {
+              "browserTarget": "Example:build:json2"
+            },
+            "json3": {
+              "browserTarget": "Example:build:json3"
+            },
+            "protobuf": {
+              "browserTarget": "Example:build:protobuf"
             }
           }
         },

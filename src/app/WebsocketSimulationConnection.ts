@@ -1,10 +1,11 @@
 import {Client} from '@stomp/stompjs';
-import {BehaviorSubject, interval, Subscription} from 'rxjs';
+import {interval, Subscription} from 'rxjs';
 import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
 import {JsonFormatter} from './formatter/JsonFormatter';
-import {STOP_SENDING_TIMEOUT, URL_WEBSOCKET} from '../../globalConfig';
+import {COMMUNICATION_TIME, URL_WEBSOCKET} from '../../globalConfig';
+import {environment} from '../environments/environment';
 
 export class WebsocketSimulationConnection {
   private additionalData = this.randomString(1000, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -20,8 +21,7 @@ export class WebsocketSimulationConnection {
   constructor(nick, measurementService) {
     this.nick = nick;
     this.measurementService = measurementService;
-    this.setFormatter(new ProtobufFormatter());
-    // this.setFormatter(new JsonFormatter());
+    this.setFormatter(environment.FORMATTER);
   }
 
   // tslint:disable-next-line:typedef
@@ -35,17 +35,14 @@ export class WebsocketSimulationConnection {
 
   initializeConnection(data, timeToSend): void {
     this.stompClient = new Client({
-      // brokerURL: 'ws://83.229.84.77:8080/socket',
       brokerURL: URL_WEBSOCKET,
-      // debug: (str) => {
-      //   console.log(str);
-      // },
       splitLargeFrames: true,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000
     });
 
+    console.error(this.stompClient);
     this.stompClient.debug = () => {
     };
 
@@ -62,11 +59,11 @@ export class WebsocketSimulationConnection {
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {
       });
 
-      this.stompClient.subscribe('/pacman/refresh/coins', () => {
-      });
-
-      this.stompClient.subscribe('/pacman/get/coin', (coinPosition) => {
-      });
+      // this.stompClient.subscribe('/pacman/refresh/coins', () => {
+      // });
+      //
+      // this.stompClient.subscribe('/pacman/get/coin', (coinPosition) => {
+      // });
 
       this.stompClient.subscribe('/user/queue/reply', (currentCoinPosition) => {
       });
@@ -74,8 +71,8 @@ export class WebsocketSimulationConnection {
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
       });
 
-      this.stompClient.subscribe('/pacman/collision/update', (allCoinPosition) => {
-      });
+      // this.stompClient.subscribe('/pacman/collision/update', (allCoinPosition) => {
+      // });
     };
 
     this.stompClient.onStompError = (frame) => {
@@ -98,7 +95,7 @@ export class WebsocketSimulationConnection {
     // data.additionalData = this.additionalData;
     setTimeout(() => {
       console.error('Zaczynam wysylac dane.');
-      const sender = interval(21);
+      const sender = interval(10);
       this.sub = sender.subscribe(() => {
         timesRun += 1;
         if (timesRun === 200) {
@@ -120,7 +117,7 @@ export class WebsocketSimulationConnection {
       this.sub.unsubscribe();
       console.error('Zakonczono komunikacje z serverem');
       this.disconnect();
-    }, STOP_SENDING_TIMEOUT);
+    }, COMMUNICATION_TIME);
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +133,7 @@ export class WebsocketSimulationConnection {
       this.stompClient.publish({
         destination: '/app/send/position',
         body: JSON.stringify(
-          dataWithSpecificFormat
+          dataToSend
         ),
         headers: {
           requestTimestamp: new Date().getTime().toString()

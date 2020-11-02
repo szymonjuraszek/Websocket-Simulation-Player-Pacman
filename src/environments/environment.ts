@@ -2,8 +2,13 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {JsonFormatter} from '../app/formatter/JsonFormatter';
+
 export const environment = {
-  production: false
+  production: false,
+  FORMATTER: new JsonFormatter(),
+  startPlayer: 0,
+  endPlayer: 5
 };
 
 /*
