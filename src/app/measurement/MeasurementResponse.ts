@@ -1,13 +1,31 @@
 export class MeasurementResponse {
+  // tslint:disable-next-line:variable-name
   private _id: string;
+  // tslint:disable-next-line:variable-name
   private _response_time_in_millis: number;
+  // tslint:disable-next-line:variable-name
   private _specific_second_of_communication: number;
+  // tslint:disable-next-line:variable-name
   private _version_response: number;
+  // tslint:disable-next-line:variable-name
   private _size: number;
+  // tslint:disable-next-line:variable-name
   private _request_timestamp: number;
 
-  constructor(id: string, response_time_in_millis: number, specific_second_of_communication: number, version_response: number,
-              size: number, request_timestamp: number) {
+
+  // tslint:disable-next-line:variable-name
+  constructor(
+    id: string,
+    // tslint:disable-next-line:variable-name
+    response_time_in_millis: number,
+    // tslint:disable-next-line:variable-name
+    specific_second_of_communication: number,
+    // tslint:disable-next-line:variable-name
+    version_response: number,
+    size: number,
+    // tslint:disable-next-line:variable-name
+    request_timestamp: number
+  ) {
     this._id = id;
     this._response_time_in_millis = response_time_in_millis;
     this._specific_second_of_communication = specific_second_of_communication;

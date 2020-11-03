@@ -9,33 +9,28 @@ import {environment} from '../environments/environment';
 import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
-  private additionalData = this.randomString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+  // SIZE
+  // private additionalData = this.randomString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  // private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+
+  // FREQUENCY
   private readonly speed;
 
+  // MEASUREMENT
+  private timeForStartCommunication;
+  private measurementService: MeasurementService;
+
+  // COMMUNICATION
   private stompClient: Client;
   private formatter: IFormatter;
   private readonly nick;
   private sub: Subscription;
-
-  private measurementService: MeasurementService;
-  private timeForStartCommunication;
 
   constructor(nick, measurementService, speed, formatter) {
     this.nick = nick;
     this.measurementService = measurementService;
     this.setFormatter(formatter);
     this.speed = speed;
-    console.error(formatter);
-  }
-
-  // tslint:disable-next-line:typedef
-  randomString(length, chars) {
-    let result = '';
-    for (let i = length; i > 0; --i) {
-      result += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return result;
   }
 
   initializeConnection(data, timeToSend): void {
@@ -61,18 +56,18 @@ export class WebsocketSimulationConnection {
           const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
           if (parsedPlayer.nickname.match('second*')) {
             const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-            this.measurementService.addMeasurementResponse(parsedPlayer.nickname,
+            this.measurementService.addMeasurementResponse(
+              parsedPlayer.nickname,
               responseTimeInMillis,
               Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-              parsedPlayer.version, Number(playerToUpdate.headers['content-length']), playerToUpdate.headers.requestTimestamp);
+              parsedPlayer.version,
+              Number(playerToUpdate.headers['content-length']),
+              Number(playerToUpdate.headers.requestTimestamp));
           }
         }
       });
 
       this.stompClient.subscribe('/pacman/update/monster', (monster) => {
-      });
-
-      this.stompClient.subscribe('/user/queue/reply', (currentCoinPosition) => {
       });
 
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
@@ -96,10 +91,12 @@ export class WebsocketSimulationConnection {
 
     let timesRun = 0;
     let strategy = true;
+
     // for (let i = 0; i < this.arrayWithAdditionalData.length; i++) {
     //   this.arrayWithAdditionalData[i] = new AdditionalData(11111, 22222, 33333, this.additionalData);
     // }
     // data.additionalData = this.additionalData;
+
     setTimeout(() => {
       const sender = interval(this.speed);
       this.sub = sender.subscribe(() => {
@@ -127,12 +124,6 @@ export class WebsocketSimulationConnection {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  disconnect(): void {
-    console.error('Disconnected');
-    this.stompClient.deactivate();
-  }
-
   sendPosition(dataToSend): void {
     const dataWithSpecificFormat = this.formatter.encode(dataToSend);
     if (this.formatter instanceof JsonFormatter) {
@@ -175,6 +166,25 @@ export class WebsocketSimulationConnection {
     });
   }
 
+  disconnect(): void {
+    console.error('Disconnected');
+    this.stompClient.deactivate();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  setFormatter(formatter): any {
+    this.formatter = formatter;
+  }
+
+  randomString(length, chars): any {
+    let result = '';
+    for (let i = length; i > 0; --i) {
+      result += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return result;
+  }
+
   makeId(length): string {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -183,9 +193,5 @@ export class WebsocketSimulationConnection {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  }
-
-  setFormatter(formatter): any {
-    this.formatter = formatter;
   }
 }

@@ -1,16 +1,13 @@
-import {MeasurementService} from '../measurement/MeasurementService';
 import {saveAs} from 'file-saver';
+import {HEADERS_IN_CSV_FILE} from '../../../globalConfig';
 
 export class DownloadService {
 
   private RESPONSE_FILE = 'response_measurement.csv';
 
-  constructor(private cacheMeasurement: MeasurementService) {
-  }
-
   public downloadResponseFile(data: any): void {
     const replacer = (key, value) => value === null ? '' : value; // specify how you want to handle null values here
-    let header = ['id', 'response_time_in_millis', 'specific_second_of_communication', 'version_response', 'size'];
+    let header = HEADERS_IN_CSV_FILE;
     const csv = data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
     header = header.map((x) => {
       return x.toUpperCase();
