@@ -20,6 +20,7 @@ export class AppComponent {
 
   constructor() {
     this.measurementService = new MeasurementService();
+    this.downloadService = new DownloadService(this.measurementService);
   }
 
   setSendingSpeedAndStart(speed: number, type: string): void {

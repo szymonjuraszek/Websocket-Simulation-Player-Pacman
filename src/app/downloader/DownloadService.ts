@@ -1,7 +1,11 @@
 import {saveAs} from 'file-saver';
 import {HEADERS_IN_CSV_FILE} from '../../../globalConfig';
+import {MeasurementService} from '../measurement/MeasurementService';
 
 export class DownloadService {
+
+  constructor(private cacheMeasurement: MeasurementService) {
+  }
 
   private RESPONSE_FILE = 'response_measurement.csv';
 
