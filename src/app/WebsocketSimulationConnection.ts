@@ -52,7 +52,7 @@ export class WebsocketSimulationConnection {
       });
 
       this.stompClient.subscribe('/pacman/update/player', (playerToUpdate) => {
-        if (environment.startPlayer === 5) {
+        if (this.nick === 'second06') {
           const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
           if (parsedPlayer.nickname.match('second*')) {
             const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
