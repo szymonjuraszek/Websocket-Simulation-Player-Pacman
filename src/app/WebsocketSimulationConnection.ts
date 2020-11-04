@@ -10,8 +10,8 @@ import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
   // SIZE
-  // private additionalData = this.randomString(50, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  // private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+  private additionalData = this.randomString(25, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
 
   // FREQUENCY
   private readonly speed;
@@ -105,10 +105,10 @@ export class WebsocketSimulationConnection {
     let timesRun = 0;
     let strategy = true;
 
-    // for (let i = 0; i < this.arrayWithAdditionalData.length; i++) {
-    //   this.arrayWithAdditionalData[i] = new AdditionalData(11111, 22222, 33333, this.additionalData);
-    // }
-    // data.additionalData = this.additionalData;
+    for (let i = 0; i < this.arrayWithAdditionalData.length; i++) {
+      this.arrayWithAdditionalData[i] = new AdditionalData(11111, 22222, 33333, this.additionalData);
+    }
+    data.additionalData = this.arrayWithAdditionalData;
 
     setTimeout(() => {
       const sender = interval(this.speed);
