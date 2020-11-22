@@ -1,7 +1,9 @@
 <button (click)="downloadFile()">Download</button>
 <button (click)="setSendingSpeedAndStart(10, 'proto')">10-proto</button>
 <button (click)="setSendingSpeedAndStart(15, 'proto')">15-proto</button>
-<button (click)="setSendingSpeedAndStart(21, 'proto')">21-proto</button>
+<button (click)="setSendingSpeedAndStart(200, 'proto')">200-proto</button>
 <button (click)="setSendingSpeedAndStart(10, 'json')">10-json</button>
 <button (click)="setSendingSpeedAndStart(15, 'json')">15-json</button>
 <button (click)="setSendingSpeedAndStart(21, 'json')">21-json</button>
+<br>
+<input (keyup)="onKey($event)">

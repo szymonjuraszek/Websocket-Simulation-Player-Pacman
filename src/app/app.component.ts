@@ -17,6 +17,12 @@ import {JsonFormatter} from './formatter/JsonFormatter';
 export class AppComponent {
   private downloadService: DownloadService;
   private readonly measurementService: MeasurementService;
+  private howManyObjects: number;
+
+  // tslint:disable-next-line:typedef
+  onKey(event) {
+    this.howManyObjects = event.target.value;
+  }
 
   constructor() {
     this.measurementService = new MeasurementService();
@@ -39,7 +45,10 @@ export class AppComponent {
     }
 
     for (let i = environment.startPlayer; i < environment.endPlayer; i++) {
-      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname, this.measurementService, speed, formatter);
+      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname,
+        this.measurementService,
+        speed, formatter, this.howManyObjects
+      );
       simulationConnection[i].initializeConnection(examplePlayers[i], 1000 + 10000 * i);
     }
   }

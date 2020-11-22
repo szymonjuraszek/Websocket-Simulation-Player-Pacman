@@ -4,14 +4,14 @@ import {IFormatter} from './formatter/IFormatter';
 import {ProtobufFormatter} from './formatter/ProtobufFormatter';
 import {MeasurementService} from './measurement/MeasurementService';
 import {JsonFormatter} from './formatter/JsonFormatter';
-import {COMMUNICATION_TIME, SIZE_OF_ADDITIONAL_DATA, URL_WEBSOCKET} from '../../globalConfig';
+import {COMMUNICATION_TIME, URL_WEBSOCKET} from '../../globalConfig';
 import {environment} from '../environments/environment';
 import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
   // SIZE
   private additionalData = this.randomString(25, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  private arrayWithAdditionalData: Array<AdditionalData> = new Array<AdditionalData>(SIZE_OF_ADDITIONAL_DATA);
+  private arrayWithAdditionalData: Array<AdditionalData>;
 
   // FREQUENCY
   private readonly speed;
@@ -26,11 +26,15 @@ export class WebsocketSimulationConnection {
   private readonly nick;
   private sub: Subscription;
 
-  constructor(nick, measurementService, speed, formatter) {
+  constructor(nick, measurementService, speed, formatter, howManyObjects) {
     this.nick = nick;
     this.measurementService = measurementService;
     this.setFormatter(formatter);
     this.speed = speed;
+    this.arrayWithAdditionalData = new Array<AdditionalData>(Number(howManyObjects));
+    console.error(howManyObjects);
+    console.error(this.arrayWithAdditionalData.length);
+
   }
 
   initializeConnection(data, timeToSend): void {
