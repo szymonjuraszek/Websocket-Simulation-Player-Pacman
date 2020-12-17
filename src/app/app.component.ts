@@ -17,40 +17,24 @@ import {JsonFormatter} from './formatter/JsonFormatter';
 export class AppComponent {
   private downloadService: DownloadService;
   private readonly measurementService: MeasurementService;
-  private howManyObjects: number;
-
-  // tslint:disable-next-line:typedef
-  onKey(event) {
-    this.howManyObjects = event.target.value;
-  }
 
   constructor() {
     this.measurementService = new MeasurementService();
     this.downloadService = new DownloadService(this.measurementService);
   }
 
-  setSendingSpeedAndStart(speed: number, type: string): void {
+  setSendingSpeedAndStart(speed: number): void {
     const examplePlayers = (data as any).default;
     const simulationConnection = new Array(examplePlayers.length);
-    let formatter;
-    switch (type) {
-      case 'proto': {
-        formatter = new ProtobufFormatter();
-        break;
-      }
-      case 'json': {
-        formatter = new JsonFormatter();
-        break;
-      }
-    }
 
-    for (let i = environment.startPlayer; i < environment.endPlayer; i++) {
-      simulationConnection[i] = new WebsocketSimulationConnection(examplePlayers[i].nickname,
-        this.measurementService,
-        speed, formatter, this.howManyObjects
-      );
-      simulationConnection[i].initializeConnection(examplePlayers[i], 1000 + 10000 * i);
-    }
+    simulationConnection[environment.whichPlayer] = new WebsocketSimulationConnection(
+      examplePlayers[environment.whichPlayer].nickname,
+      this.measurementService, speed
+    );
+    simulationConnection[environment.whichPlayer].initializeConnection(
+      examplePlayers[environment.whichPlayer],
+      1000 - (300 * environment.whichPlayer) + 10000 * environment.whichPlayer
+    );
   }
 
   downloadFile(): void {

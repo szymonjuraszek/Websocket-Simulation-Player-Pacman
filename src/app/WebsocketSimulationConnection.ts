@@ -9,10 +9,6 @@ import {environment} from '../environments/environment';
 import {AdditionalData} from './model/AdditionalData';
 
 export class WebsocketSimulationConnection {
-  // SIZE
-  private additionalData = this.randomString(25, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  private arrayWithAdditionalData: Array<AdditionalData>;
-
   // FREQUENCY
   private readonly speed;
 
@@ -26,15 +22,11 @@ export class WebsocketSimulationConnection {
   private readonly nick;
   private sub: Subscription;
 
-  constructor(nick, measurementService, speed, formatter, howManyObjects) {
+  constructor(nick, measurementService, speed) {
     this.nick = nick;
     this.measurementService = measurementService;
-    this.setFormatter(formatter);
+    this.setFormatter(new ProtobufFormatter());
     this.speed = speed;
-    this.arrayWithAdditionalData = new Array<AdditionalData>(Number(howManyObjects));
-    console.error(howManyObjects);
-    console.error(this.arrayWithAdditionalData.length);
-
   }
 
   initializeConnection(data, timeToSend): void {
@@ -58,16 +50,12 @@ export class WebsocketSimulationConnection {
       this.stompClient.subscribe('/pacman/update/player', (playerToUpdate) => {
         if (this.nick === 'second06') {
           const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
-          if (parsedPlayer.nickname.match('second*')) {
-            const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-            this.measurementService.addMeasurementResponse(
-              parsedPlayer.nickname,
-              responseTimeInMillis,
-              Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-              parsedPlayer.version,
-              Number(playerToUpdate.headers['content-length']),
-              Number(playerToUpdate.headers.requestTimestamp));
-          }
+          this.saveMeasurement(
+            parsedPlayer.nickname,
+            playerToUpdate.headers.requestTimestamp,
+            parsedPlayer.version,
+            playerToUpdate.headers['content-length']
+          );
         }
       });
 
@@ -77,16 +65,12 @@ export class WebsocketSimulationConnection {
       this.stompClient.subscribe('/user/queue/player', (playerToUpdate) => {
         if (this.nick === 'second06') {
           const parsedPlayer = this.formatter.decodePlayer(playerToUpdate);
-          if (parsedPlayer.nickname.match('second*')) {
-            const responseTimeInMillis = new Date().getTime() - Number(playerToUpdate.headers.requestTimestamp);
-            this.measurementService.addMeasurementResponse(
-              parsedPlayer.nickname,
-              responseTimeInMillis,
-              Math.ceil((Number(playerToUpdate.headers.requestTimestamp) - this.timeForStartCommunication) / 1000),
-              parsedPlayer.version,
-              Number(playerToUpdate.headers['content-length']),
-              Number(playerToUpdate.headers.requestTimestamp));
-          }
+          this.saveMeasurement(
+            parsedPlayer.nickname,
+            playerToUpdate.headers.requestTimestamp,
+            parsedPlayer.version,
+            playerToUpdate.headers['content-length']
+          );
         }
       });
     };
@@ -108,11 +92,6 @@ export class WebsocketSimulationConnection {
 
     let timesRun = 0;
     let strategy = true;
-
-    for (let i = 0; i < this.arrayWithAdditionalData.length; i++) {
-      this.arrayWithAdditionalData[i] = new AdditionalData(11111, 22222, 33333, this.additionalData);
-    }
-    data.additionalData = this.arrayWithAdditionalData;
 
     setTimeout(() => {
       const sender = interval(this.speed);
@@ -141,6 +120,7 @@ export class WebsocketSimulationConnection {
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   sendPosition(dataToSend): void {
     const dataWithSpecificFormat = this.formatter.encode(dataToSend);
     if (this.formatter instanceof JsonFormatter) {
@@ -194,21 +174,19 @@ export class WebsocketSimulationConnection {
     this.formatter = formatter;
   }
 
-  randomString(length, chars): any {
-    let result = '';
-    for (let i = length; i > 0; --i) {
-      result += chars[Math.floor(Math.random() * chars.length)];
+  saveMeasurement(nickname, requestTimestamp, version, contentLength): void {
+    if (environment.whichPlayer === 3) {
+      if (nickname.match('remote*')) {
+        // tslint:disable-next-line:no-shadowed-variable
+        const responseTimeInMillis = new Date().getTime() - Number(requestTimestamp);
+        this.measurementService.addMeasurementResponse(
+          nickname,
+          responseTimeInMillis,
+          Math.ceil((Number(requestTimestamp) - this.timeForStartCommunication) / 1000),
+          version,
+          Number(contentLength),
+          Number(requestTimestamp));
+      }
     }
-    return result;
-  }
-
-  makeId(length): string {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   }
 }

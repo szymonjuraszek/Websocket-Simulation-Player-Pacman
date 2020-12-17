@@ -29,35 +29,83 @@
             "scripts": []
           },
           "configurations": {
-            "json1": {
+            "player1": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.json1.ts"
+                  "with": "src/environments/environment.player1.ts"
                 }
               ]
             },
-            "json2": {
+            "player2": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.json2.ts"
+                  "with": "src/environments/environment.player2.ts"
                 }
               ]
             },
-            "json3": {
+            "player3": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.json3.ts"
+                  "with": "src/environments/environment.player3.ts"
                 }
               ]
             },
-            "protobuf": {
+            "player4": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.protobuf.ts"
+                  "with": "src/environments/environment.player4.ts"
+                }
+              ]
+            },
+            "player5": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player5.ts"
+                }
+              ]
+            },
+            "player6": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player6.ts"
+                }
+              ]
+            },
+            "player7": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player7.ts"
+                }
+              ]
+            },
+            "player8": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player8.ts"
+                }
+              ]
+            },
+            "player9": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player9.ts"
+                }
+              ]
+            },
+            "player10": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.player10.ts"
                 }
               ]
             }
@@ -69,17 +117,35 @@
             "browserTarget": "Example:build"
           },
           "configurations": {
-            "json1": {
-              "browserTarget": "Example:build:json1"
+            "player1": {
+              "browserTarget": "Example:build:player1"
             },
-            "json2": {
-              "browserTarget": "Example:build:json2"
+            "player2": {
+              "browserTarget": "Example:build:player2"
             },
-            "json3": {
-              "browserTarget": "Example:build:json3"
+            "player3": {
+              "browserTarget": "Example:build:player3"
             },
-            "protobuf": {
-              "browserTarget": "Example:build:protobuf"
+            "player4": {
+              "browserTarget": "Example:build:player4"
+            },
+            "player5": {
+              "browserTarget": "Example:build:player5"
+            },
+            "player6": {
+              "browserTarget": "Example:build:player6"
+            },
+            "player7": {
+              "browserTarget": "Example:build:player7"
+            },
+            "player8": {
+              "browserTarget": "Example:build:player8"
+            },
+            "player9": {
+              "browserTarget": "Example:build:player9"
+            },
+            "player10": {
+              "browserTarget": "Example:build:player10"
             }
           }
         },
