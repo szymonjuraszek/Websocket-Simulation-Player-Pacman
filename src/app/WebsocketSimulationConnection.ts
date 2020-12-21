@@ -175,8 +175,8 @@ export class WebsocketSimulationConnection {
   }
 
   saveMeasurement(nickname, requestTimestamp, version, contentLength): void {
-    if (environment.whichPlayer === 3) {
-      if (nickname.match('remote*')) {
+    if (environment.whichPlayer === 6) {
+      if (nickname.match('qwert*')) {
         // tslint:disable-next-line:no-shadowed-variable
         const responseTimeInMillis = new Date().getTime() - Number(requestTimestamp);
         this.measurementService.addMeasurementResponse(
